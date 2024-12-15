@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validasi Email</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #ffffff; /* Ganti latar belakang halaman menjadi putih */
+        }
+        .body-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+        }
+        .container {
+            text-align: center;
+            background: #ffffff;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        #tape-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        #tape {
+            display: flex;
+            border: 2px solid #333;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .cell {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-right: 1px solid #ddd;
+            font-size: 20px;
+            background-color: #fff;
+            color: #333;
+        }
+        
+        .cell:last-child {
+            border-right: none;
+        }
+        
+        .head {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 20px solid #ff6f61;
+            margin-top: 70px;
+            transition: all 0.5s ease;
+        }
+        
+        #controls {
+            margin-top: 20px;
+        }
+        
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+        .diagram {
+            position: relative;
+            width: 400px;
+            height: 300px;
+        }
+        @keyframes pulse-line {
+            0% {
+                transform: scaleY(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scaleY(1.3);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scaleY(1);
+                opacity: 1;
+            }
+        }
+        @keyframes pulse-arrow {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    
+        .state {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 2px solid red;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        ation: p.state.active {
+            background-color: #df78b7;
+        }
+        .state.final.active {
+            background-color: #df78b7;
+        }
+        .state.final {
+            border-width: 2px;
+        }
+        .state.final::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 2px solid red;
+            border-radius: 50%;
+        }
+        .arrow.left { /* Make sure arrows are visible */            
+            position: absolute;
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-bottom: 5px solid transparent;
+            border-top: 5px solid transparent;
+            border-right: 10px solid #4caf50; /* Warna panah */
+        }
+        .arrow.right { /* Make sure arrows are visible */            
+            position: absolute;
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-bottom: 5px solid transparent;
+            border-top: 5px solid transparent;
+            border-left: 10px solid #4caf50; /* Warna panah */
+        }
+        .arrow.down {
+            position: absolute;
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 10px solid #4caf50; /* Warna panah */
+        }
+        .line {
+            position: absolute;
+            background-color: #4caf50;
+        }
+        .line.horizontal {
+            height: 2px;
+        }
+        .line.vertical {
+            width: 2px;
+        }
+        .line.vertical.active {
+            height: 50px;
+        }
+
+        .line.q0.valid.active {
+            border-width: 80px;
+            background-color: #4caf50;
+            transform-origin: center;
+            animation: pulse-line 1s infinite;
+        }
+        .line.q1.valid.active {
+            border-width: 80px;
+            background-color: #4caf50;
+            transform-origin: center;
+            animation: pulse-line 1s infinite;
+        }
+        .line.q2.valid.active {
+            border-width: 80px;
+            background-color: #4caf50;
+            transform-origin: center;
+            animation: pulse-line 1s infinite;
+        }
+        .line.q3.valid.active {
+            border-width: 80px;
+            background-color: #4caf50;
+            transform-origin: center;
+            animation: pulse-line 1s infinite;
+        }
+        .line.q4.valid.active {
+            border-width: 80px;
+            background-color: #4caf50;
+            transform-origin: center;
+            animation: pulse-line 1s infinite;
+        }
+        .line.q5.at.active {
+            border-width: 80px;
+            background-color: #4caf50;
+            transform-origin: center;
+            animation: pulse-line 1s infinite;
+        }
+        .line.q6.g.active {
+            border-width: 80px;
+            background-color: #4caf50;
+            transform-origin: center;
+            animation: pulse-line 1s infinite;
+        }
+        .line.q7.m.active {
+            border-width: 80px;
+            background-color: #4caf50;
+            transform-origin: center;
+            animation: pulse-line 1s infinite;
+        }
+        .line.q8.a.active {
+            border-width: 80px;
+            background-color: #4caf50;
+            transform-origin: center;
+        }
+        .line.q9.i.active {
+            border-width: 80px;
+            background-color: #4caf50;
+            transform-origin: center;
+            animation: pulse-line 1s infinite;
+        }
+        .line.q10.l.active {
+            border-width: 80px;
+            background-color: #4caf50;
+            transform-origin: center;
+            animation: pulse-line 1s infinite;
+        }
+        .line.q11.titik.active {
+            border-width: 80px;
+            background-color: #4caf50;
+            transform-origin: center;
+            animation: pulse-line 1s infinite;
+        }
+        .line.q12.c.active {
+            border-width: 80px;
+            background-color: #4caf50;
+            transform-origin: center;
+            animation: pulse-line 1s infinite;
+        }
+        .line.q13.o.active {
+            border-width: 80px;
+            background-color: #4caf50;
+            transform-origin: center;
+            animation: pulse-line 1s infinite;
+        }
+        .line.q14.m.active {
+            border-width: 80px;
+            background-color: #4caf50;
+            transform-origin: center;
+            animulse-line 1s infinite;
+        }
+
+        .arrow.q0.valid.active {
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 10px solid #4caf50; /* Warna panah */
+            animation: pulse-arrow 1s infinite;
+        }
+        .arrow.q1.valid.active {
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 10px solid #4caf50; /* Warna panah */
+            animation: pulse-arrow 1s infinite;
+        }
+        .arrow.q2.valid.active {
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 10px solid #4caf50; /* Warna panah */
+            animation: pulse-arrow 1s infinite;
+        }
+        .arrow.q3.valid.active {
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 10px solid #4caf50; /* Warna panah */
+            animation: pulse-arrow 1s infinite;
+        }
+        .arrow.q4.valid.active {
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 10px solid #4caf50; /* Warna panah */
+            animation: pulse-arrow 1s infinite;
+        }
+        .arrow.q5.at.active {
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-right: 10px solid #4caf50; /* Warna panah */
+            animation: pulse-arrow 1s infinite;
+        }
+        .arrow.q6.g.active {
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-right: 10px solid #4caf50; /* Warna panah */
+            animation: pulse-arrow 1s infinite;
+        }
+        .arrow.q7.m.active {
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-right: 10px solid #4caf50; /* Warna panah */
+            animation: pulse-arrow 1s infinite;
+        }
+        .arrow.q8.a.active {
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-right: 10px solid #4caf50; /* Warna panah */
+            animation: pulse-arrow 1s infinite;
+        }
+        .arrow.q9.i.active {
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 10px solid #4caf50; /* Warna panah */
+            animation: pulse-arrow 1s infinite;
+        }
+        .arrow.q10.l.active {
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 10px solid #4caf50; /* Warna panah */
+            animation: pulse-arrow 1s infinite;
+        }
+        .arrow.q11.titik.active {
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 10px solid #4caf50; /* Warna panah */
+            animation: pulse-arrow 1s infinite;
+        }
+        .arrow.q12.c.active {
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 10px solid #4caf50; /* Warna panah */
+            animation: pulse-arrow 1s infinite;
+        }
+        .arrow.q13.o.active {
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 10px solid #4caf50; /* Warna panah */
+            animation: pulse-arrow 1s infinite;
+        }
+        .arrow.q14.m.active {
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 10px solid #4caf50; /* Warna panah */
+            animation: pulse-arrow 2s infinite;
+        }
+
+        .line.qs.valid.active {
+            border-width: 80px;
+            background-color: #4caf50;
+            transform-origin: center;
+            animation: pulse-line 1s infinite;
+        }
+        .arrow.qs.valid.active {
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 10px solid #4caf50; /* Warna panah */
+            animation: pulse-arrow 2s infinite;
+        }
+        
+        .label {
+            position: absolute;
+            font-size: 14px;
+        }
+        .label1 {
+            position: absolute;
+            font-size: 10px;
+        }
+
+    </style>
+    
+</head>
+<body>
+    <div class="text-center">
+        <label for="input-email" class="form-label">Input: a-z atau 0-9</label>
+        <input type="text" id="input-email" class="form-control w-50 mx-auto" placeholder="Masukkan kombinasi a-z atau 0-9">
+        <button type="button" class="btn btn-outline-primary" onclick="simpanKarakter()">Oke Gass!!</button>
+    </div>
+    <div class="body-container mt-3">
+        <div class="diagram">
+            <!-- States -->
+            <div id="qs" class="state" style="top: -30px;">qS</div>
+            <div id="qs-valid" class="line vertical qs valid" style="left: 20px; top: 10px; height: 40px;"></div>
+            <div id="qs_valid" class="arrow down qs valid" style="left: 15px; top: 40px;"></div>
+
+            <div id="q0" class="state" style="left: 0; top: 50px;">q0</div>
+            <div id="q1" class="state" style="left: 80px; top: 50px;">q1</div>
+            <div id="q2" class="state" style="left: 160px; top: 50px;">q2</div>
+            <div id="q3" class="state" style="left: 240px; top: 50px;">q3</div>
+            <div id="q4" class="state" style="left: 320px; top: 50px;">q4</div>
+            <div id="q5" class="state" style="left: 320px; top: 150px;">q5</div>
+            <div id="q6" class="state" style="left: 240px; top: 150px;">q6</div>
+            <div id="q7" class="state" style="left: 160px; top: 150px;">q7</div>
+            <div id="q8" class="state" style="left: 80px; top: 150px;">q8</div>
+            <div id="q9" class="state" style="left: 0; top: 150px;">q9</div>
+            <div id="q10"class="state" style="left: 0; top: 250px;">q10</div>
+            <div id="q11" class="state" style="left: 80px; top: 250px;">q11</div>
+            <div id="q12" class="state" style="left: 160px; top: 250px;">q12</div>
+            <div id="q13" class="state" style="left: 240px; top: 250px;">q13</div>
+            <div id="q14" class="state" style="left: 320px; top: 250px;">q14</div>
+            <div id="qf" class="state final" style="left: 320px; top: 350px;">qf</div>
+
+            <!-- Horizontal lines -->
+            <div id="q0-valid" class="line horizontal q0 valid" style="left: 43px; top: 70px; width: 30px;"></div>
+            <div id="q1-valid" class="line horizontal q1 valid" style="left: 124px; top: 70px; width: 30px;"></div>
+            <div id="q2-valid" class="line horizontal q2 valid" style="left: 203px; top: 70px; width: 30px;"></div>
+            <div id="q3-valid" class="line horizontal q3 valid" style="left: 283px; top: 70px; width: 30px;"></div>
+            <div id="q5-valid" class="line horizontal q5 at" style="left: 290px; top: 170px; width: 30px;"></div>
+            <div id="q6-valid" class="line horizontal q6 g" style="left: 210px; top: 170px; width: 30px;"></div>
+            <div id="q7-valid" class="line horizontal q7 m" style="left: 130px; top: 170px; width: 30px;"></div>
+            <div id="q8-valid" class="line horizontal q8 a" style="left: 50px; top: 170px; width: 30px;"></div>
+            <div id="q10-valid" class="line horizontal q10 l" style="left: 43px; top: 270px; width: 30px;"></div>
+            <div id="q11-valid" class="line horizontal q11 titik" style="left: 123px; top: 270px; width: 30px;"></div>
+            <div id="q12-valid" class="line horizontal q12 c" style="left: 203px; top: 270px; width: 30px;"></div>
+            <div id="q13-valid" class="line horizontal q13 o" style="left: 283px; top: 270px; width: 30px;"></div>
+
+            <!-- Vertical lines -->
+            <div id="q4-valid" class="line vertical q4 valid" style="left: 340px; top: 93px; height: 50px;"></div>
+            <div id="q9-valid" class="line vertical q9 i" style="left: 20px; top: 193px; height: 50px;"></div>
+            <div id="q14-valid" class="line vertical q14 m" style="left: 340px; top: 293px; height: 50px;"></div>
+
+            <!-- Arrows -->
+            <div id="q0_valid" class="arrow right q0 valid" style="left: 70px; top: 65px;"></div>
+            <div id="q1_valid" class="arrow right q1 valid" style="left: 150px; top: 65px;"></div>
+            <div id="q2_valid" class="arrow right q2 valid" style="left: 230px; top: 65px;"></div>
+            <div id="q3_valid" class="arrow right q3 valid" style="left: 310px; top: 65px;"></div>
+            <div id="q4_valid" class="arrow down q4 valid" style="left: 336px; top: 140px;"></div> <!-- Corrected -->
+            <div id="q5_valid" class="arrow left q5 at" style="left: 284px; top: 165px;"></div>
+            <div id="q6_valid" class="arrow left q6 g" style="left: 202px; top: 165px;"></div>
+            <div id="q7_valid" class="arrow left q7 m" style="left: 122px; top: 165px;"></div>
+            <div id="q8_valid" class="arrow left q8 a" style="left: 42px; top: 165px;"></div>
+            <div id="q9_valid" class="arrow down q9 i" style="left: 16px; top: 240px;"></div>
+            <div id="q10_valid" class="arrow right q10 l" style="left: 70px; top: 265px;"></div>
+            <div id="q11_valid" class="arrow right q11 titik" style="left: 150px; top: 265px;"></div>
+            <div id="q12_valid" class="arrow right q12 c" style="left: 230px; top: 265px;"></div>
+            <div id="q13_valid" class="arrow right q13 o" style="left: 310px; top: 265px;"></div>
+            <div id="q14_valid" class="arrow down q14 m" style="left: 336px; top: 340px;"></div> <!-- Corrected -->
+
+            <!-- Labels -->
+            <div class="label1" style="left: 270px; top: 30px;">a-z, 0-9</div>
+            <div class="label1" style="left: 190px; top: 30px;">a-z, 0-9</div>
+            <div class="label1" style="left: 115px; top: 30px;">a-z, 0-9</div>
+            <div class="label1" style="left: 30px; top: 30px;">a-z, 0-9</div>
+            <div class="label1" style="left: 350px; top: 110px;">a-z, 0-9</div>
+            <div class="label" style="left: 290px; top: 135px;">@</div>
+            <div class="label" style="left: 215px; top: 135px;">g</div>
+            <div class="label" style="left: 135px; top: 135px;">m</div>
+            <div class="label" style="left: 55px; top: 135px;">a</div>
+            <div class="label" style="left: 10px; top: 210px;">i</div>
+            <div class="label" style="left: 50px; top: 240px;">l</div>
+            <div class="label" style="left: 130px; top: 240px;">.</div>
+            <div class="label" style="left: 210px; top: 240px;">c</div>
+            <div class="label" style="left: 290px; top: 240px;">o</div>
+            <div class="label" style="left: 355px; top: 310px;">m</div>
+        </div>
+        <div class="container">
+            <h1>Mesin Turing</h1>
+            <div id="tape-container">
+            <div id="tape"></div>
+            </div>
+            <div id="controls">
+            <button onclick="start()">Mulai</button>
+            <button onclick="reset()">Reset</button>
+            </div>
+            <div id="input-controls">
+            </div>
+        </div>
+    </div>
+    <script src="email.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>
