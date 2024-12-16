@@ -44,6 +44,9 @@
         #jumlah-iframe {
             height: 500px;
         }
+        #state-iframe {
+            height: 500px;
+        }
         .iframe-container iframe {
             width: 100%;
             height: 500px;
@@ -82,25 +85,28 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="card-title mb-0">Kelompok 10</h5>
                 <select id="machine-select" class="form-select w-auto">
-                    <option value="">Pilih Mesin</option>
+                    <option value="state">Pilih Mesin</option>
                     <option value="ganjil">String Ganjil</option>
                     <option value="jumlah">Perhitungan jumlah bilangan</option>
                     <option value="email">Validasi Email</option>
+                    
                 </select>
             </div>
             <div class="card-body">
                 <h1 class="h4 text-center">Visualisasi FSA dan Mesin Turing</h1>
                 
-                <p id="description" class="text-center">Pilih salah satu opsi untuk melihat state diagram dan mesin turing.</p>
+                <p id="description" class="text-center">Pilih salah satu opsi untuk melihat state diagram dan mesin turing</p>
                
                 <!-- Input dinamis -->
                 <div id="input-section" class="text-center my-3"></div>
                 <!-- Frame untuk menampilkan file terkait -->
                 <div class="iframe-container">
+                    <iframe id="state-iframe" src="state.html" class="d-none w-100"></iframe> <!-- Iframe baru untuk state.html -->
                     <iframe id="ganjil-iframe" src="string-ganjil/ganjil.html" class="d-none"></iframe>
-                    <iframe id="email-iframe" src="https://rajaaizin123.github.io/turing-machine-kelompok10/validasi-email/email.html" class="d-none w-100"></iframe>
+                    <iframe id="email-iframe" src="validasi-email/email.html" class="d-none w-100"></iframe>
                     <iframe id="jumlah-iframe" src="perhitungan-biasa/state5.html" class="d-none w-100"></iframe>
                 </div>
+                
             </div>
         </div>
     </div>
@@ -110,31 +116,36 @@
             const selectedValue = this.value;
 
             // Elemen-elemen untuk kontrol
+            const stateIframe = document.getElementById("state-iframe"); // Tambahkan elemen stateIframe
             const description = document.getElementById("description");
             const inputSection = document.getElementById("input-section");
             const ganjilIframe = document.getElementById("ganjil-iframe");
             const jumlahIframe = document.getElementById("jumlah-iframe");
             const emailIframe = document.getElementById("email-iframe");
-
-
+            
             // Sembunyikan semua iframe dan reset input
+            stateIframe.classList.add("d-none"); // Sembunyikan iframe state
             ganjilIframe.classList.add("d-none");
             jumlahIframe.classList.add("d-none");
             emailIframe.classList.add("d-none");
+        
             inputSection.innerHTML = "";
 
             // Tampilkan iframe, deskripsi, dan input sesuai pilihan
-            if (selectedValue === "ganjil") {
-                description.textContent = "Menghitung string ganjil.";
+            if (selectedValue === "state") { // Logika untuk state.html
+                description.textContent = "Visualisasi state diagram";
+                stateIframe.classList.remove("d-none");
+            } else if (selectedValue === "ganjil") {
+                description.textContent = "Menghitung string ganjil";
                 ganjilIframe.classList.remove("d-none");
             } else if (selectedValue === "jumlah") {
-                description.textContent = "Menghitung jumlah nol.";
+                description.textContent = "Menghitung jumlah nol";
                 jumlahIframe.classList.remove("d-none");
             } else if (selectedValue === "email") {
-                description.textContent = "Validasi email dengan panjang 6 karakter.";
-                emailIframe.classList.remove("d-none");
+                description.textContent = "Validasi email dengan panjang 6 karakter";
+                emailIframe.classList.remove("d-none"); 
             } else {
-                description.textContent = "Pilih salah satu opsi untuk melihat state diagram dan mesin turing.";
+                description.textContent = "Pilih salah satu opsi untuk melihat state diagram dan mesin turing";
             }
         });
     </script>
