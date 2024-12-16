@@ -185,10 +185,10 @@ function moveHead(direction) {
 
 // Fungsi untuk menjalankan mesin
 function start() {
-   if (tape[headPosition--] === tape[headPosition++]){
+   if (tape[headPosition] === tape[headPosition++]){
     return Swal.fire({
       title: "Pesan dari beta!",
-      text: "titik nya banyak kali!",
+      text: "Karakter sama tidak boleh berdekatan...",
       icon: "error"
     });
    }
@@ -209,19 +209,19 @@ function start() {
   if (tape.length == 0){
     return Swal.fire({
       title: "Pesan dari beta!",
-      text: "Isi dulu..!",
+      text: "Silakan isi tape terlebih dahulu..",
       icon: "warning"
     });
   }
 
-  // if (tape.length != 16){
-  //   return alert("Email hanya bisa dengan panjang 6 karakter");
-  // }
+  if (tape.length != 16){
+     return alert("Email hanya bisa dengan panjang 6 karakter");
+   }
 
   if (!transition) {
     return Swal.fire({
       title: "Pesan dari beta!",
-      text: "Wah salah nih!",
+      text: "Wah ada yang salah nih!",
       icon: "error"
     });
   }
@@ -230,8 +230,8 @@ function start() {
   animasiPanah(currentState, "valid")
   //animasiState(currentState);
 
-  console.log(`State: ${currentState}`);
-  console.log(`inputan: ${tape[headPosition]}`);
+  //console.log(`State: ${currentState}`);
+  //console.log(`inputan: ${tape[headPosition]}`);
 
   tape[headPosition] = transition.write(currentSymbol);
   moveHead(transition.move);
