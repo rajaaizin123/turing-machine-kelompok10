@@ -3,7 +3,7 @@ let tape = [];
 
 // menghitung apakah jumlah string ganjil
  let currentState = "q0";
- let finalState = "q1, q2, q3";
+ let finalState = "q1, q2";
  let headPosition = 0;  // Posisi awal head
 
 function initializeTape() {
@@ -164,7 +164,7 @@ function start() {
     }
     return Swal.fire({
       title: "Pesan dari beta!",
-      text: "Haduh!, Ditolak!",
+      text: "Haduh... Stringnya Ditolak!",
       icon: "error"
     });
   }
