@@ -215,7 +215,11 @@ function start() {
   }
 
   if (tape.length != 16){
-     return alert("Email hanya bisa dengan panjang 6 karakter");
+      return Swal.fire({
+      title: "Pesan dari beta!",
+      text: "Email hanya bisa panjang 6 karakter..",
+      icon: "warning"
+    });
    }
 
   if (!transition) {
