@@ -119,7 +119,7 @@ function start() {
   if (tape.length == 0){
     return Swal.fire({
       title: "Pesan dari beta!",
-      text: "Input dulu mbah..!",
+      text: "Silakan input dulu yaa..",
       icon: "warning"
     });
   }
