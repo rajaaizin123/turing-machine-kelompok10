@@ -185,13 +185,13 @@ function moveHead(direction) {
 
 // Fungsi untuk menjalankan mesin
 function start() {
-   if (tape[headPosition] === tape[headPosition++]){
-    return Swal.fire({
-      title: "Pesan dari beta!",
-      text: "Karakter sama tidak boleh berdekatan...",
-      icon: "error"
-    });
-   }
+   // if (tape[headPosition] === tape[headPosition++]){
+   //  return Swal.fire({
+   //    title: "Pesan dari beta!",
+   //    text: "Karakter sama tidak boleh berdekatan...",
+   //    icon: "error"
+   //  });
+   // }
 
   const currentSymbol = tape[headPosition];
   const transition = Object.values(transitions[currentState]).find((t) =>
